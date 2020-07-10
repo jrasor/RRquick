@@ -36,7 +36,8 @@ public class LocalizationTest extends LinearOpMode {
         while (!isStopRequested()) {
             Pose2d baseVel = new Pose2d(
                     -gamepad1.left_stick_y,
-                    -gamepad1.left_stick_x,
+               //     -gamepad1.left_stick_x,  // mecanum
+                    0, // fore-aft, heading (not tank)
                     -gamepad1.right_stick_x
             );
 
@@ -56,7 +57,6 @@ public class LocalizationTest extends LinearOpMode {
             }
 
             drive.setDrivePower(vel);
-
             drive.update();
 
             Pose2d poseEstimate = drive.getPoseEstimate();
