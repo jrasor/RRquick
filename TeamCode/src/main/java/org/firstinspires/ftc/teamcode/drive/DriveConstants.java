@@ -54,7 +54,7 @@ public class DriveConstants {
     public static double kStatic = 0;
 
     /*
-     * These values are used to generate the trajectories for you robot. To ensure proper operation,
+     * These values are used to generate the trajectories for your robot. To ensure proper operation,
      * the constraints should never exceed ~80% of the robot's actual capabilities. While Road
      * Runner is designed to enable faster autonomous motion, it is a good idea for testing to start
      * small and gradually increase them later after everything is working. The velocity and
@@ -65,7 +65,6 @@ public class DriveConstants {
             30.0, 30.0, 0.0,
             Math.toRadians(180.0), Math.toRadians(180.0), 0.0
     );
-
 
     public static double encoderTicksToInches(double ticks) {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
