@@ -49,9 +49,9 @@ public class DriveConstants {
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
-    public static double kA = 0;
-    public static double kStatic = 0;
+    public static double kV = 1.0 / rpmToVelocity(MAX_RPM); // P of PID
+    public static double kA = 0; // I of PID
+    public static double kStatic = 0; // D of PID
 
     /*
      * These values are used to generate the trajectories for your robot. To ensure proper operation,
@@ -70,7 +70,7 @@ public class DriveConstants {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
     }
 
-    public static double rpmToVelocity(double rpm) {
+    public static double rpmToVelocity(double rpm) { // Revolutions per second, or ω/2pi.
         return rpm * GEAR_RATIO * 2 * Math.PI * WHEEL_RADIUS / 60.0;
     }
 

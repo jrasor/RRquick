@@ -6,14 +6,14 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 
 /*
- * This is an example of a more complex path to really test the tuning.
+ *   This is an example of a spline path for a tank drive robot, approximately following
+ * a circular arc of 90 degrees.
  */
-@Autonomous(name = "Spline Test", group = "drive")
-public class SplineTest extends LinearOpMode {
+@Autonomous(name="Spline Arc", group = "drive")
+public class SplineArc extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -23,18 +23,12 @@ public class SplineTest extends LinearOpMode {
 
         if (isStopRequested()) return;
 
+        //   Move from the corner of one tile to the opposite corner, and rotating
+        // 90 degrees CCW.
         Trajectory traj = drive.trajectoryBuilder(new Pose2d())
-                .splineTo(new Vector2d(30, 30), 0)
+                .splineTo(new Vector2d(24, 24), Math.toRadians(90))
                 .build();
 
         drive.followTrajectory(traj);
-
-        sleep(2000);
-
-        drive.followTrajectory(
-                drive.trajectoryBuilder(new Pose2d(30, 30, Math.toRadians(180)), true)
-                        .splineTo(new Vector2d(0, 0), Math.toRadians(180))
-                        .build()
-        );
     }
 }

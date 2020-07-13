@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
  */
 @Config
 @TeleOp(group = "drive")
-public class TankDrive2 extends LinearOpMode {
+public class TankDrive extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
