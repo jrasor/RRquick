@@ -45,7 +45,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
                                                 ==|==        ==|==
  */
 @Autonomous(name="Simple Spline Test", group = "drive")
-public class SplineTest2 extends LinearOpMode {
+public class SplineSimple extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
