@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * INCREMENT sets how much to increase/decrease the servo position each cycle
  * CYCLE_MS sets the update period.
  *
- * This code assumes a Servo configured with the name "arm" as is found on a Trainerbot.
+ * This code assumes a Servo configured with the name "paddle" as is found on a Trainerbot.
  *
  * NOTE: When any servo position is set, ALL attached servos are activated, so ensure that any other
  * connected servos are able to move freely before running this test.
@@ -64,7 +64,7 @@ public class OperateArm extends LinearOpMode {
 
         // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
-        arm = hardwareMap.get(Servo.class, "arm");
+        arm = hardwareMap.get(Servo.class, "paddle");
         boolean rampUp = true;
         // Wait for the start button
         telemetry.addData(">", "Press Start to activate arm." );

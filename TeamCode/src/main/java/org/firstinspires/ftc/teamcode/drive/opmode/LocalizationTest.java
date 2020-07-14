@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
  * encoder localizer heading may be significantly off if the track width has not been tuned).
  */
 @Config
-@TeleOp(group = "drive")
+@TeleOp(name = "Localization Test", group = "drive")
 public class LocalizationTest extends LinearOpMode {
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;

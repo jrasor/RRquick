@@ -40,7 +40,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * INCREMENT sets how much to increase/decrease the servo position each cycle
  * CYCLE_MS sets the update period.
  *
- * This code assumes a Servo configured with the name "arm" as is found on a Trainerbot.
+ * This code assumes a Servo configured with the name "paddle" as is found on a Trainerbot.
  *
  * NOTE: When any servo position is set, ALL attached servos are activated, so ensure that any other
  * connected servos are able to move freely before running this test.
@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 //@Disabled
 public class ScanServo extends LinearOpMode {
 
-    static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
+    static final double INCREMENT   = 0.001;     // amount to slew servo each CYCLE_MS cycle
     static final int    CYCLE_MS    =   50;     // period of each cycle
     static final double MAX_POS     =  1.0;     // Maximum rotational position
     static final double MIN_POS     =  0.0;     // Minimum rotational position
@@ -67,7 +67,7 @@ public class ScanServo extends LinearOpMode {
 
         // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
-        servo = hardwareMap.get(Servo.class, "arm");
+        servo = hardwareMap.get(Servo.class, "paddle");
 
         // Wait for the start button
         telemetry.addData(">", "Press Start to scan Servo." );

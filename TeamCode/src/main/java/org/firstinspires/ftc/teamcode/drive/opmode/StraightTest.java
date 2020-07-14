@@ -6,23 +6,25 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.drive.FrontWheelDrive;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 
 /*
- * This is a simple routine to test translational drive capabilities.
+ * This is a simple routine to test straight drive capabilities.
+ * Lay out a trajectory with .forward or .back methods.
  */
 @Config
 @Autonomous(group = "drive")
 public class StraightTest extends LinearOpMode {
-    public static double DISTANCE = 60; // in
+    public static double DISTANCE = 96; // in
 
     @Override
     public void runOpMode() throws InterruptedException {
         //SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        SampleTankDrive drive = new SampleTankDrive(hardwareMap);
+        FrontWheelDrive robot = new FrontWheelDrive(hardwareMap);
 
-        Trajectory trajectory = drive.trajectoryBuilder(new Pose2d())
+        Trajectory trajectory = robot.trajectoryBuilder(new Pose2d())
                 .forward(DISTANCE)
                 .build();
 
@@ -30,6 +32,6 @@ public class StraightTest extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        drive.followTrajectory(trajectory);
+        robot.followTrajectory(trajectory);
     }
 }
