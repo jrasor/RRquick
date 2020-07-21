@@ -50,10 +50,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 //@Disabled
 public class OperateArm extends LinearOpMode {
 
-    static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
+    static final double INCREMENT   = 0.001;     // amount to slew servo each CYCLE_MS cycle
     static final int    CYCLE_MS    =   50;     // period of each cycle
     static final double STOWED      =  1.0;     // Retracted over robot body
     static final double DEPLOYED    =  0.0;     // Extended out over Field
+    static final double HALFWAY    =   (STOWED - DEPLOYED)/2;
 
     // Define class members
     Servo   arm;
