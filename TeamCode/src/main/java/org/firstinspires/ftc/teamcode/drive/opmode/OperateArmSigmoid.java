@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.drive.opmode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * This OpMode scans a single servo back and forwards until Stop is pressed.
@@ -46,65 +47,71 @@ import com.qualcomm.robotcore.hardware.Servo;
  * ToDo: remove that constraint.
  */
 
-@TeleOp(name = "Operate Arm", group = "Actuators")
+@TeleOp(name = "Operate Arm Gently", group = "Actuators")
 //@Disabled
-public class OperateArm extends LinearOpMode {
+public class OperateArmSigmoid extends LinearOpMode {
 
     static final double INCREMENT   = 0.001;     // amount to slew servo each CYCLE_MS cycle
     static final int    CYCLE_MS    =   50;     // period of each cycle
-    static final double STOWED      =  1.0;     // Retracted over robot body
-    static final double DEPLOYED    =  0.0;     // Extended out over Field
-    static final double HALFWAY    =   (STOWED - DEPLOYED)/2;
+    static final double STOWED      =  0.0;     // Retracted over robot body
+    static final double DEPLOYED    =  0.80;     // Extended out over Field
+    static final double HALFWAY    =   (DEPLOYED - STOWED)/2;
 
     // Define class members
     Servo   arm;
-    double  position = STOWED;
+    double position; // = arm.getPosition(); // STOWED;
+    double minPosition = STOWED;
+    double targetPosition; // tPosition(); // = STOWED;
+    double maxPosition = DEPLOYED;
+    double maxPositionError = 0.01;
 
     @Override
     public void runOpMode() {
+        //  Initialize servo and arm.
+        arm = hardwareMap.get(Servo.class, "arm");
+        arm.setPosition(STOWED);
+        position = arm.getPosition();
+        ElapsedTime runtime = new ElapsedTime();
+        // At timescale 1.0, 1.0 second between extreme positions STOWED and DEPLOYED.
+        double timeScale               = 0.1;
 
-        // Connect to servo (Assume PushBot Left Hand)
-        // Change the text in quotes to match any servo name on your robot.
-        arm = hardwareMap.get(Servo.class, "paddle");
-        boolean rampUp = true;
         // Wait for the start button
         telemetry.addData(">", "Press Start to activate arm." );
         telemetry.update();
         waitForStart();
+        runtime.reset();
+        double time                     = 0.0;        // Time since test began.
 
-        // Scan servo till stop pressed.
+        //  At positionScale 1.0, range is fully DEPLOYED - STOWED.
+        double positionScale = DEPLOYED - STOWED;
         while(opModeIsActive()){
-
-            if (gamepad1.x) {
-                rampUp = true;
-            }
-            if (gamepad1.y) {
-                rampUp = false;
-            }
-
-            //   Slowly pull the arm into the retracted position
-            if (rampUp) {
-                // Keep stepping up until we hit the retracted value.
-                position += INCREMENT ;
-                if (position >= STOWED ) {
-                    position = STOWED;
+                if (gamepad1.a) {
+                    runtime.reset();
+                    minPosition = targetPosition = STOWED;
+                    maxPosition = position = arm.getPosition();
+                    positionScale = maxPosition - minPosition;
                 }
-            }
-            else {
-                //   Slowly extend arm out over the Field
-                position -= INCREMENT ;
-                if (position <= DEPLOYED ) {
-                    position = DEPLOYED;
+                if (gamepad1.y) {
+                    runtime.reset();
+                    maxPosition = targetPosition = DEPLOYED;
+                    minPosition = position = arm.getPosition();
+                    positionScale = maxPosition - minPosition;
                 }
-            }
 
             // Display the current value
+            telemetry.addData("Time", "%5.3f", time);
             telemetry.addData("Arm Position", "%5.2f", position);
+            telemetry.addData("Target Position", "%5.2f", targetPosition);
             telemetry.addData(">", "Press Stop to end test." );
-            telemetry.update();
 
-            // Set the servo to the new position and pause;
-            arm.setPosition(position);
+            // update time and positions
+            time = runtime.time();
+            if (Math.abs (targetPosition - position) > maxPositionError) {
+                position = positionScale * (0.5 - 0.5 * Math.cos(timeScale * Math.PI * time));
+                arm.setPosition(position);
+                telemetry.addData ("", "Moving...");
+            }
+            telemetry.update();
             sleep(CYCLE_MS);
             idle();
         }

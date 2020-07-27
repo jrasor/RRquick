@@ -37,8 +37,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import static java.lang.Math.round;
 
 /**
- *      This OpMode scans a single servo back and forwards until Stop is pressed, following
- * a sigmoid angle vs time function over the interval (0, 1):
+ *      This OpMode continuously scans a single servo back and forwards until Stop is pressed,
+ * following a sigmoid angle vs time function over the interval (0, 1):
  *
  *      r (t) = 0.5 - 0.5 * cos (πt)
  *
@@ -46,44 +46,38 @@ import static java.lang.Math.round;
  *  point is reached, then slows down to gently approach the endpoint.
  *      The domain and range can be scaled.
  *
- * The code is structured as a LinearOpMode.
- * CYCLE_MS sets the update period.
+ *      The code is structured as a LinearOpMode.
+ *      CYCLE_MS sets the update period.
  *
- * This code assumes two Servos configured with the name "servo0" and "servo1" as found
- * on a Trainerbot.
+ *      This code assumes a servo with the name "arm" as found on a Trainerbot.
  *
- * NOTE: When any servo position is set, ALL attached servos are activated, so ensure
+ *      NOTE: When any servo position is set, ALL attached servos are activated, so ensure
  * that any other connected servos are able to move freely before running this test.
  */
 
-@TeleOp(name = "Operate Arm Gently", group = "Actuators")
+@TeleOp(name = "Scan Arm Gently", group = "Actuators")
 //@Disabled
-public class OperateArm2 extends LinearOpMode {
+public class ScanServoSigmoid extends LinearOpMode {
     static final int    CYCLE_MS    =   50;     // period of each report cycle
     // The two servos are mounted facing each other, so forward on one is reverse
     // on the other.
-    static final double LEFT_STOWED      =  1.0;     // Retracted over robot body
-    static final double LEFT_DEPLOYED    =  0.0;     // Extended out over Field
-    static final double RIGHT_STOWED      =  0.0;     // Retracted over robot body
-    static final double RIGHT_DEPLOYED    =  1.0;     // Extended out over Field
- //   static final double HALFWAY     =  (STOWED - DEPLOYED)/2;
-    double time                     = 0.0;        // Time since test began.
+    static final double STOWED      =  1.0;     // Retracted over robot body
+    static final double DEPLOYED      =  0.0;     // Retracted over robot body
+    static final double HALFWAY     =  (STOWED - DEPLOYED)/2;
+//    double time                     = 0.0;        // Time since test began.
     // At scale 1.0, 1.0 second between extreme positions STOWED and DEPLOYED.
     double timeScale                     = 0.3;
 
     // Define class members
-    Servo leftServo;
-    Servo rightServo;
-    double leftPosition = LEFT_STOWED;
-    double rightPosition = RIGHT_STOWED;
+    Servo armServo;
+    double position = STOWED;
 
     @Override
     public void runOpMode() {
         ElapsedTime runtime = new ElapsedTime();
 
-        // Change the text in quotes to match any servo name on your robot.
-        leftServo = hardwareMap.get(Servo.class, "servo0");
-        rightServo = hardwareMap.get(Servo.class, "servo1");
+        // Change the text in quotes to match a servo name on your robot.
+        armServo = hardwareMap.get(Servo.class, "arm");
 
         // Wait for the start button
         telemetry.addData(">", "Press Start to activate arm." );
@@ -93,21 +87,17 @@ public class OperateArm2 extends LinearOpMode {
 
         // Scan servo till stop pressed.
         while(opModeIsActive()){
-            // Move servos to current position
-            //leftServo.setPosition(leftPosition);
-            rightServo.setPosition(rightPosition);
+            armServo.setPosition(position);
 
             //  Report on time and position
             telemetry.addData("Run time", "%5.3f", time);
-            telemetry.addData("Left servo position", "%5.2f", leftPosition);
-            telemetry.addData("Right servo position", "%5.2f", rightPosition);
+            telemetry.addData("Servo position", "%5.2f", position);
             telemetry.addData(">", "Press Stop to end test.");
             telemetry.update();
 
             // update time and positions
             time = runtime.time();
-            leftPosition = 0.5 - 0.5 * Math.cos(timeScale * Math.PI * time);
-            rightPosition = 0.5 + 0.5 * Math.cos(timeScale * Math.PI * time);
+            position = 0.5 - 0.5 * Math.cos(timeScale * Math.PI * time);
             sleep(CYCLE_MS);
             idle();
         }
