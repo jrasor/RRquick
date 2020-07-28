@@ -35,33 +35,40 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
- * This OpMode scans a single servo back and forwards until Stop is pressed.
- * The code is structured as a LinearOpMode
- * INCREMENT sets how much to increase/decrease the servo position each cycle
- * CYCLE_MS sets the update period.
+ * This OpMode operates a single servo arm forward and back, using the gamepad Y button
+ * (DEPLOYed) the A button to go back (STOWed). The code is structured as a LinearOpMode.
  *
- * This code assumes a Servo configured with the name "paddle" as is found on a Trainerbot.
+ * The motion follows a sigmoid angle vs time function over the interval (0, 1):
  *
- * NOTE: When any servo position is set, ALL attached servos are activated, so ensure that any other
- * connected servos are able to move freely before running this test.
- * ToDo: remove that constraint.
+ *        r (t) = 0.5 - 0.5 * cos (πt)
+ *
+ *  This function starts slowly from zero, builds up some speed until the halfway
+ *  point is reached, then slows down to gently approach the endpoint.
+ *
+ *  The domain and range can be scaled. The initial position can be other than zero.
+ *
+ *  CYCLE_MS sets the update period for position and reports.
+ *
+ *  We assume an instance of the Servo class, configured with the name "arm" as is
+ *  found on a Trainerbot.
+ *
  */
 
 @TeleOp(name = "Operate Arm Gently", group = "Actuators")
 //@Disabled
 public class OperateArmSigmoid extends LinearOpMode {
 
-    static final double INCREMENT   = 0.001;     // amount to slew servo each CYCLE_MS cycle
-    static final int    CYCLE_MS    =   10;     // period of each up date cycle
+    static final double INCREMENT   = 0.001;    // **amount to slew servo each CYCLE_MS cycle
+    static final int    CYCLE_MS    =   10;     // period of each update cycle
     static final double STOWED      =  0.0;     // Retracted over robot body
-    static final double DEPLOYED    =  0.80;     // Extended out over Field
-    static final double HALFWAY    =   (DEPLOYED - STOWED)/2;
+    static final double DEPLOYED    =  0.80;    // Extended out over Field
+    static final double HALFWAY     =  (DEPLOYED - STOWED)/2;
 
     // Define class members
     Servo   arm;
-    double position; // = arm.getPosition(); // STOWED;
+    double position;
     double minPosition = STOWED;
-    double targetPosition; //  = STOWED;
+    double targetPosition;
     double startingPosition;
     double maxPosition = DEPLOYED;
     double maxPositionError = 0.01;
@@ -72,29 +79,27 @@ public class OperateArmSigmoid extends LinearOpMode {
         arm = hardwareMap.get(Servo.class, "arm");
 //        arm.setPosition(STOWED);
         arm.setPosition(HALFWAY);
-//        arm.scaleRange(0,1.0);
+//        Todo: see if this is of any use. arm.scaleRange(0,1.0);
         position = arm.getPosition();
         telemetry.addData("Arm starting at", "%5.2f", position);
         telemetry.update();
         ElapsedTime runtime = new ElapsedTime();
-        // At timescale 0.5, 2.0 seconds between extreme positions STOWED and DEPLOYED.
+        // Update frequency is 1 / timeScale.
         double timeScale               = 0.3;
 
         // Wait for the start button
-        //telemetry.addData(">", "Press Start to activate arm." );
-        //telemetry.update();
         waitForStart();
         runtime.reset();
         double time                     = 0.0;        // Time since test began.
 
-        //  At positionScale 1.0, range is fully DEPLOYED - STOWED.
+        //  Full scale for now.
         double positionScale = DEPLOYED - STOWED;
         while(opModeIsActive()){
-                if (gamepad1.a) { // ** goes wrong way, over 1
+                if (gamepad1.a) {
                     runtime.reset();
                     minPosition = targetPosition = STOWED;
                     maxPosition = startingPosition = position = arm.getPosition();
-                    positionScale = minPosition - maxPosition;
+                    positionScale = minPosition - maxPosition; // yes, negative.
                 }
                 if (gamepad1.y) {
                     runtime.reset();
