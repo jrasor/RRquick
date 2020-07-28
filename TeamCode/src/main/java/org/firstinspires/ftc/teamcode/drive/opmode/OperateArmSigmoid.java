@@ -52,7 +52,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class OperateArmSigmoid extends LinearOpMode {
 
     static final double INCREMENT   = 0.001;     // amount to slew servo each CYCLE_MS cycle
-    static final int    CYCLE_MS    =   50;     // period of each cycle
+    static final int    CYCLE_MS    =   10;     // period of each up date cycle
     static final double STOWED      =  0.0;     // Retracted over robot body
     static final double DEPLOYED    =  0.80;     // Extended out over Field
     static final double HALFWAY    =   (DEPLOYED - STOWED)/2;
@@ -61,7 +61,8 @@ public class OperateArmSigmoid extends LinearOpMode {
     Servo   arm;
     double position; // = arm.getPosition(); // STOWED;
     double minPosition = STOWED;
-    double targetPosition; // tPosition(); // = STOWED;
+    double targetPosition; //  = STOWED;
+    double startingPosition;
     double maxPosition = DEPLOYED;
     double maxPositionError = 0.01;
 
@@ -69,15 +70,19 @@ public class OperateArmSigmoid extends LinearOpMode {
     public void runOpMode() {
         //  Initialize servo and arm.
         arm = hardwareMap.get(Servo.class, "arm");
-        arm.setPosition(STOWED);
+//        arm.setPosition(STOWED);
+        arm.setPosition(HALFWAY);
+//        arm.scaleRange(0,1.0);
         position = arm.getPosition();
+        telemetry.addData("Arm starting at", "%5.2f", position);
+        telemetry.update();
         ElapsedTime runtime = new ElapsedTime();
-        // At timescale 1.0, 1.0 second between extreme positions STOWED and DEPLOYED.
-        double timeScale               = 0.1;
+        // At timescale 0.5, 2.0 seconds between extreme positions STOWED and DEPLOYED.
+        double timeScale               = 0.3;
 
         // Wait for the start button
-        telemetry.addData(">", "Press Start to activate arm." );
-        telemetry.update();
+        //telemetry.addData(">", "Press Start to activate arm." );
+        //telemetry.update();
         waitForStart();
         runtime.reset();
         double time                     = 0.0;        // Time since test began.
@@ -85,29 +90,30 @@ public class OperateArmSigmoid extends LinearOpMode {
         //  At positionScale 1.0, range is fully DEPLOYED - STOWED.
         double positionScale = DEPLOYED - STOWED;
         while(opModeIsActive()){
-                if (gamepad1.a) {
+                if (gamepad1.a) { // ** goes wrong way, over 1
                     runtime.reset();
                     minPosition = targetPosition = STOWED;
-                    maxPosition = position = arm.getPosition();
-                    positionScale = maxPosition - minPosition;
+                    maxPosition = startingPosition = position = arm.getPosition();
+                    positionScale = minPosition - maxPosition;
                 }
                 if (gamepad1.y) {
                     runtime.reset();
                     maxPosition = targetPosition = DEPLOYED;
-                    minPosition = position = arm.getPosition();
+                    minPosition = startingPosition = position = arm.getPosition();
                     positionScale = maxPosition - minPosition;
                 }
 
             // Display the current value
             telemetry.addData("Time", "%5.3f", time);
             telemetry.addData("Arm Position", "%5.2f", position);
+            telemetry.addData("Starting Position", "%5.2f", startingPosition);
             telemetry.addData("Target Position", "%5.2f", targetPosition);
             telemetry.addData(">", "Press Stop to end test." );
 
             // update time and positions
             time = runtime.time();
             if (Math.abs (targetPosition - position) > maxPositionError) {
-                position = positionScale * (0.5 - 0.5 * Math.cos(timeScale * Math.PI * time));
+                position = startingPosition + positionScale * (0.5 - 0.5 * Math.cos(timeScale * Math.PI * time));
                 arm.setPosition(position);
                 telemetry.addData ("", "Moving...");
             }

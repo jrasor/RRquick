@@ -34,6 +34,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
+
 import static java.lang.Math.round;
 
 /**
@@ -59,14 +61,13 @@ import static java.lang.Math.round;
 //@Disabled
 public class ScanServoSigmoid extends LinearOpMode {
     static final int    CYCLE_MS    =   50;     // period of each report cycle
-    // The two servos are mounted facing each other, so forward on one is reverse
-    // on the other.
-    static final double STOWED      =  1.0;     // Retracted over robot body
-    static final double DEPLOYED      =  0.0;     // Retracted over robot body
-    static final double HALFWAY     =  (STOWED - DEPLOYED)/2;
+    static final double STOWED      =  0.00;     // Retracted over robot body
+    static final double DEPLOYED      =  0.80;     // Retracted over robot body
+    static final double HALFWAY     =  (DEPLOYED - STOWED)/2;
 //    double time                     = 0.0;        // Time since test began.
     // At scale 1.0, 1.0 second between extreme positions STOWED and DEPLOYED.
-    double timeScale                     = 0.3;
+    double timeScale                     = 0.1;
+    double positionScale = Math.abs (DEPLOYED - STOWED);
 
     // Define class members
     Servo armServo;
@@ -80,7 +81,7 @@ public class ScanServoSigmoid extends LinearOpMode {
         armServo = hardwareMap.get(Servo.class, "arm");
 
         // Wait for the start button
-        telemetry.addData(">", "Press Start to activate arm." );
+        telemetry.addData(">", "Press Start to scan arm." );
         telemetry.update();
         waitForStart();
         runtime.reset();
@@ -97,7 +98,7 @@ public class ScanServoSigmoid extends LinearOpMode {
 
             // update time and positions
             time = runtime.time();
-            position = 0.5 - 0.5 * Math.cos(timeScale * Math.PI * time);
+            position = positionScale * (0.5 - 0.5 * Math.cos(timeScale * Math.PI * time));
             sleep(CYCLE_MS);
             idle();
         }
