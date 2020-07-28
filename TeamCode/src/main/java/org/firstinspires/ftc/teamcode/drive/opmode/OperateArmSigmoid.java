@@ -57,8 +57,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp(name = "Operate Arm Gently", group = "Actuators")
 //@Disabled
 public class OperateArmSigmoid extends LinearOpMode {
-
-    static final double INCREMENT   = 0.001;    // **amount to slew servo each CYCLE_MS cycle
+    
     static final int    CYCLE_MS    =   10;     // period of each update cycle
     static final double STOWED      =  0.0;     // Retracted over robot body
     static final double DEPLOYED    =  0.80;    // Extended out over Field
