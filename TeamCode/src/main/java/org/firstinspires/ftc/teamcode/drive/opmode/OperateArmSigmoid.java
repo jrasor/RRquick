@@ -58,9 +58,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 //@Disabled
 public class OperateArmSigmoid extends LinearOpMode {
     
-    static final int    CYCLE_MS    =   10;     // period of each update cycle
-    static final double STOWED      =  0.0;     // Retracted over robot body
-    static final double DEPLOYED    =  0.80;    // Extended out over Field
+    static final int    CYCLE_MS    =   10;    // period of each update cycle
+    static final double STOWED      =  0.0;    // Retracted over robot body
+    static final double DEPLOYED    =  0.8;    // Extended out over Field. 1.0 for HiTEKs.
     static final double HALFWAY     =  (DEPLOYED - STOWED)/2;
 
     // Define class members
@@ -77,7 +77,7 @@ public class OperateArmSigmoid extends LinearOpMode {
         //  Initialize servo and arm.
         arm = hardwareMap.get(Servo.class, "arm");
 //        arm.setPosition(STOWED);
-        arm.setPosition(HALFWAY);
+        arm.setPosition(STOWED);
 //        Todo: see if this is of any use. arm.scaleRange(0,1.0);
         position = arm.getPosition();
         telemetry.addData("Arm starting at", "%5.2f", position);
