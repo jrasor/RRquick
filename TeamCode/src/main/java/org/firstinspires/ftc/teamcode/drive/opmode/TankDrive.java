@@ -3,11 +3,10 @@ package org.firstinspires.ftc.teamcode.drive.opmode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
+import org.firstinspires.ftc.teamcode.drive.TemperedTankDrive;
 
 /**
  * This is a simple teleop routine for just driving the the robot around like a normal
@@ -22,7 +21,7 @@ public class TankDrive extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         //SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        SampleTankDrive drive = new SampleTankDrive(hardwareMap);
+        TemperedTankDrive drive = new TemperedTankDrive(hardwareMap);
 
         waitForStart();
 

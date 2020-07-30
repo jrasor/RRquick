@@ -6,8 +6,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
+import org.firstinspires.ftc.teamcode.drive.TemperedTankDrive;
 
 /*
  * Op mode for tuning follower PID coefficients (located in the drive base classes). The robot
@@ -21,7 +20,7 @@ public class FollowerPIDTuner extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        SampleTankDrive drive = new SampleTankDrive(hardwareMap);
+        TemperedTankDrive drive = new TemperedTankDrive(hardwareMap);
 
         Pose2d startPose = new Pose2d(-DISTANCE / 2, -DISTANCE / 2, 0);
 

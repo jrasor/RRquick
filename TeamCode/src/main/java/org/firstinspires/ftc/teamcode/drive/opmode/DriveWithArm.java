@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
+import org.firstinspires.ftc.teamcode.drive.TemperedTankDrive;
 
 /**
  * This is a simple teleop routine for just driving the the robot around like a normal
@@ -31,13 +31,11 @@ public class DriveWithArm extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        TemperedTankDrive robot = new TemperedTankDrive(hardwareMap);
+        double leftPower = 0.0;
+        double rightPower = 0.0;
 
-        // Connect to servo (Assume PushBot Left Hand)
-        // Change the text in quotes to match any servo name on your robot.
         arm = hardwareMap.get(Servo.class, "arm");
-        telemetry.addData(">", "Press Start to activate robot." );
-        telemetry.update();
-
         arm.setPosition(STOWED);
 //        Todo: see if this is of any use. arm.scaleRange(0,1.0);
         position = arm.getPosition();
@@ -51,14 +49,20 @@ public class DriveWithArm extends LinearOpMode {
 
         //  Arm range of motion will be full scale for now.
         double positionScale = DEPLOYED - STOWED;
+        telemetry.addData(">", "Press Start to activate robot." );
+        telemetry.update();
         waitForStart();
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        SampleTankDrive robot = new SampleTankDrive(hardwareMap);
 
-        waitForStart();
         while (opModeIsActive()) {
-            robot.setMotorPowers(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
+            // Temper the gamepad controls for more delicate movements at low power.
+            // Todo: temper method(s) should be added to robot class.
+            leftPower = gamepad1.left_stick_y;
+            leftPower = Math.pow(leftPower, 3.00);
+            rightPower = gamepad1.right_stick_y;
+            rightPower = Math.pow(rightPower, 3.00);
+            robot.setMotorPowers(leftPower, rightPower);
             robot.update();
 
             if (gamepad1.a) {

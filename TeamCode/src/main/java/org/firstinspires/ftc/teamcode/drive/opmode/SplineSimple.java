@@ -6,7 +6,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
+import org.firstinspires.ftc.teamcode.drive.TemperedTankDrive;
 
 /*
  * This is an example of a simple spline path for a tank drive robot.
@@ -49,7 +49,7 @@ public class SplineSimple extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        SampleTankDrive drive = new SampleTankDrive(hardwareMap);
+        TemperedTankDrive drive = new TemperedTankDrive(hardwareMap);
 
         waitForStart();
 
