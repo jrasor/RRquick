@@ -346,6 +346,14 @@ public class TemperedTankDrive extends TankDrive {
         }
     }
 
+    public double temper (double power) {
+        // Use a function on the interval (0.0, 1.0) to depart from linear speed response
+        // to joystick command.
+        // Simple: just cube it.
+        power = Math.pow (power, 3.0);
+        return power;
+    }
+
     @Override
     public double getRawExternalHeading() {
         return imu.getAngularOrientation().firstAngle;

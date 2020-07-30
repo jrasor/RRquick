@@ -57,11 +57,8 @@ public class DriveWithArm extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Temper the gamepad controls for more delicate movements at low power.
-            // Todo: temper method(s) should be added to robot class.
-            leftPower = gamepad1.left_stick_y;
-            leftPower = Math.pow(leftPower, 3.00);
-            rightPower = gamepad1.right_stick_y;
-            rightPower = Math.pow(rightPower, 3.00);
+            leftPower = robot.temper (gamepad1.left_stick_y); // etc.
+            rightPower = robot.temper(gamepad1.right_stick_y);
             robot.setMotorPowers(leftPower, rightPower);
             robot.update();
 
