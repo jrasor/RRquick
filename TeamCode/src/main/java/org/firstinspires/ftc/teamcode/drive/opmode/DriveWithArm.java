@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.drive.TemperedTankDrive;
  * tank drive teleop routine. It makes no attempt at localization.
  */
 @Config
-@TeleOp(name = "Drive and Use Arm", group = "drive")
+@TeleOp(name = "Tank Drive with Arm", group = "drive")
 public class DriveWithArm extends LinearOpMode {
     static final int    CYCLE_MS    =   10;    // period of each update cycle
     static final double STOWED      =  0.0;    // Retracted over robot body
