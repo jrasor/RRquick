@@ -48,7 +48,7 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kStatic;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
 
 /*
- * Simple tank drive hardware implementation for REV hardware.
+ * Tank drive hardware implementation for REV hardware.
  */
 @Config
 public class TemperedTankDrive extends TankDrive {
